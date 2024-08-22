@@ -5,9 +5,55 @@ const menu = [
   { name: "Veggie", price: 9},
 ];
 
-const cashInRegister = 100;
+let cashInRegister = 100;
+let nextOrderId = 0;
 const orderQueue = [];
 
 function addNewPizza(pizzaObj) {
   menu.push(pizzaObj);
 }
+
+
+function placeOrder(pizzaName) {
+  const selectedPizza = menu.find(pizza => pizza.name === pizzaName);
+  cashInRegister += selectedPizza.price;
+  const newOrder = {
+    id: ++nextOrderId,
+    pizza: selectedPizza,
+    status: "ordered",
+  }
+  orderQueue.push(newOrder)
+  return newOrder;
+}
+
+function completeOrder(orderId) {
+  const order = orderQueue.find(order => order.id === orderId);
+  order.status = "completed";
+  console.log(orderQueue)
+  return order;
+}
+
+
+addNewPizza({name: "Chicken Bacon Ranch", cost :12})
+addNewPizza({name: "BBQ Chicken", cost :12})
+addNewPizza({name: "Spicy Sausage", cost :11})
+
+placeOrder("BBQ Chicken")
+completeOrder(1)
+
+console.log("Menu", menu);
+console.log("Cash in register", cashInRegister);
+console.log("Order queue", orderQueue);
+
+
+
+
+
+
+
+
+
+
+
+
+

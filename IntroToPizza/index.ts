@@ -6,7 +6,7 @@ type Pizza = {
 type Order = {
   id: number,
   pizza: Pizza,
-  status: "ordered" | "completed",
+  status: string,
 }
 
 const menu = [

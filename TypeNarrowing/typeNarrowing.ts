@@ -51,10 +51,11 @@ function completeOrder(orderId: number) {
   return order;
 }
 
-function getPizzaDetail(indentifier: number | string) {
+// type narrowing
+export function getPizzaDetail(indentifier: number | string) {
   let pizzaDetail: Pizza | undefined;
   if(typeof indentifier === "string") {
-    pizzaDetail = menu.find(pizza => pizza.name === indentifier);
+    pizzaDetail = menu.find(pizza => pizza.name.toLowerCase() === indentifier.toLowerCase());
   } else {
     pizzaDetail = menu.find(pizza => pizza.id === indentifier);
   }

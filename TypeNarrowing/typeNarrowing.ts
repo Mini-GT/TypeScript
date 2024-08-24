@@ -9,23 +9,31 @@ type Order = {
   pizza: Pizza,
   status: "ordered" | "completed",
 }
+let nextPizzaId: number = 0;
+let cashInRegister: number = 100;
+let nextOrderId: number = 0;
 
 const menu: Pizza[] = [
-  { id: 1, name: "Margherita", price: 8 },
-  { id: 2, name: "Pepperoni", price: 10 },
-  { id: 3, name: "Hawaiian", price: 10 },
-  { id: 4, name: "Veggie", price: 9 },
+  { id: nextPizzaId++, name: "Margherita", price: 8 },
+  { id: nextPizzaId++, name: "Pepperoni", price: 10 },
+  { id: nextPizzaId++, name: "Hawaiian", price: 10 },
+  { id: nextPizzaId++, name: "Veggie", price: 9 },
 ];
 
-let cashInRegister = 100;
-let nextOrderId = 0;
 const orderHistory: Order[] = [];
 
-function addNewPizza(pizzaObj: Pizza) {
-  menu.push(pizzaObj);
+//`: void` return type is like a function where we DONT return any value
+function addNewPizza(pizzaObj: Pizza): Pizza {
+  const newPizza: Pizza = {
+    id: nextPizzaId++,
+    name: pizzaObj.name,
+    price: pizzaObj.price,
+  }
+  menu.push(newPizza);
+  return newPizza;
 }
 
-function placeOrder(pizzaName: string) {
+function placeOrder(pizzaName: string): Order | undefined{
   const selectedPizza = menu.find(pizza => pizza.name === pizzaName);
   if (!selectedPizza) {
     console.error(`${pizzaName} does not exist in the menu`)
@@ -41,7 +49,7 @@ function placeOrder(pizzaName: string) {
   return newOrder;
 }
 
-function completeOrder(orderId: number) {
+function completeOrder(orderId: number): Order | undefined {
   const order = orderHistory.find(order => order.id === orderId);
   if(!order) {
     console.error(`ID:${orderId} is not found`)
@@ -52,23 +60,20 @@ function completeOrder(orderId: number) {
 }
 
 // type narrowing
-export function getPizzaDetail(indentifier: number | string) {
-  let pizzaDetail: Pizza | undefined;
+export function getPizzaDetail(indentifier: number | string): Pizza | undefined {
   if(typeof indentifier === "string") {
-    pizzaDetail = menu.find(pizza => pizza.name.toLowerCase() === indentifier.toLowerCase());
+    return menu.find(pizza => pizza.name.toLowerCase() === indentifier.toLowerCase());
+  } else if (typeof indentifier === "number") {
+    return menu.find(pizza => pizza.id === indentifier);
   } else {
-    pizzaDetail = menu.find(pizza => pizza.id === indentifier);
+    throw new TypeError("Parameter `identifier` must be either a string or a number")
   }
-  if(!pizzaDetail) {
-    console.error("Cannot find pizza");
-  }
-  console.log("Pizza detail", pizzaDetail);
 }
 getPizzaDetail("Veggie");
 
-addNewPizza({ id: 5, name: "Chicken Bacon Ranch", price :12 });
-addNewPizza({ id: 6, name: "BBQ Chicken", price :12 });
-addNewPizza({ id: 7, name: "Spicy Sausage", price :11 });
+addNewPizza({ name: "Chicken Bacon Ranch", price :12 });
+addNewPizza({ name: "BBQ Chicken", price :12 });
+addNewPizza({ name: "Spicy Sausage", price :11 });
 
 placeOrder("BBQ Chicken");
 completeOrder(1);

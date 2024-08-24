@@ -4,6 +4,8 @@ type Pizza = {
   price: number,
 }
 
+type NewPizza = Partial<Pizza>;
+
 type Order = {
   id: number,
   pizza: Pizza,
@@ -23,8 +25,12 @@ const menu: Pizza[] = [
 const orderHistory: Order[] = [];
 
 //`: void` return type is like a function where we DONT return any value
-function addNewPizza(pizzaObj: Pizza): Pizza {
-  const newPizza: Pizza = {
+function addNewPizza(pizzaObj: NewPizza): Pizza | undefined {
+  if(!pizzaObj.name || !pizzaObj.price) {
+    console.log(`${pizzaObj.name || pizzaObj.price} is missing`);
+    return;
+  }
+  const newPizza = {
     id: nextPizzaId++,
     name: pizzaObj.name,
     price: pizzaObj.price,
